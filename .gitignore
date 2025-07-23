@@ -1,0 +1,15 @@
+client/node_modules
+# Ignore all node_modules directories in the client folder
+client/dist
+# Ignore the dist folder in the client folder
+client/build
+# Ignore the build folder in the client folder
+client/.env
+# Ignore the .env file in the client folder
+client/.env.local
+# Ignore the .env.local file in the client folder
+client/.env.development
+# Ignore the .env.development file in the client folder
+client/.env.production
+server/node_modules
+server/.env
