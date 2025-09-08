@@ -153,7 +153,7 @@ export async function loginController(request,response){
 
         const cookiesOption = {
             httpOnly : true,
-            secure : isProduction,
+            secure : true,
             sameSite : "None"
         }
         response.cookie('accessToken',accesstoken,cookiesOption)
