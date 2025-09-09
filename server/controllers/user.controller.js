@@ -153,7 +153,7 @@ export async function loginController(request,response){
 
         const cookiesOption = {
             httpOnly : true,
-            secure : true,
+            secure : process.env.NODE_ENV === 'production',
             sameSite : "None"
         }
         response.cookie('accessToken',accesstoken,cookiesOption)
@@ -185,7 +185,7 @@ export async function logoutController(request,response){
 
         const cookiesOption = {
             httpOnly : true,
-            secure : true,
+            secure : process.env.NODE_ENV === 'production',
             sameSite : "None"
         }
 
@@ -470,7 +470,7 @@ export async function refreshToken(request,response){
 
         const cookiesOption = {
             httpOnly : true,
-            secure : true,
+            secure : process.env.NODE_ENV === 'production',
             sameSite : "None"
         }
 
