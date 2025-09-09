@@ -464,7 +464,7 @@ export async function refreshToken(request,response){
             })
         }
 
-        const userId = verifyToken?._id
+        const userId = verifyToken?.id
 
         const newAccessToken = await generatedAccessToken(userId)
 
