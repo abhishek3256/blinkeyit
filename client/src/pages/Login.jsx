@@ -48,11 +48,25 @@ const Login = () => {
 
             if(response.data.success){
                 toast.success(response.data.message)
-                localStorage.setItem('accesstoken',response.data.data.accesstoken)
-                localStorage.setItem('refreshToken',response.data.data.refreshToken)
+                
+                // Store tokens in localStorage
+                if(response.data.data.accesstoken){
+                    localStorage.setItem('accesstoken',response.data.data.accesstoken)
+                }
+                if(response.data.data.refreshToken){
+                    localStorage.setItem('refreshToken',response.data.data.refreshToken)
+                }
 
-                const userDetails = await fetchUserDetails()
-                dispatch(setUserDetails(userDetails.data))
+                // Fetch user details
+                try {
+                    const userDetails = await fetchUserDetails()
+                    if(userDetails?.data){
+                        dispatch(setUserDetails(userDetails.data))
+                    }
+                } catch (userError) {
+                    console.log('Error fetching user details:', userError)
+                    // Still proceed with login even if user details fail
+                }
 
                 setData({
                     email : "",

@@ -6,7 +6,9 @@ const auth = async(request,response,next)=>{
        
         if(!token){
             return response.status(401).json({
-                message : "Provide token"
+                message : "Provide token",
+                error : true,
+                success : false
             })
         }
 
@@ -25,8 +27,9 @@ const auth = async(request,response,next)=>{
         next()
 
     } catch (error) {
-        return response.status(500).json({
-            message : "You have not login",///error.message || error,
+        console.log('Auth middleware error:', error.message)
+        return response.status(401).json({
+            message : "Invalid or expired token",
             error : true,
             success : false
         })

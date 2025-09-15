@@ -3,7 +3,11 @@ import SummaryApi , { baseURL } from "../common/SummaryApi";
 
 const Axios = axios.create({
     baseURL : baseURL,
-    withCredentials : true
+    withCredentials : true,
+    timeout: 10000,
+    headers: {
+        'Content-Type': 'application/json',
+    }
 })
 
 //sending access token in the header
@@ -24,14 +28,14 @@ Axios.interceptors.request.use(
 
 //extend the life span of access token with 
 // the help refresh
-Axios.interceptors.request.use(
+Axios.interceptors.response.use(
     (response)=>{
         return response
     },
     async(error)=>{
         let originRequest = error.config 
 
-        if(error.response.status === 401 && !originRequest.retry){
+        if(error.response?.status === 401 && !originRequest.retry){
             originRequest.retry = true
 
             const refreshToken = localStorage.getItem("refreshToken")
@@ -64,7 +68,13 @@ const refreshAccessToken = async(refreshToken)=>{
         localStorage.setItem('accesstoken',accessToken)
         return accessToken
     } catch (error) {
-        console.log(error)
+        console.log('Refresh token error:', error)
+        // Clear invalid tokens
+        localStorage.removeItem('accesstoken')
+        localStorage.removeItem('refreshToken')
+        // Redirect to login page
+        window.location.href = '/login'
+        return null
     }
 }
 
