@@ -26,10 +26,15 @@ FRONTEND_URL=https://your-vercel-domain.vercel.app
 NODE_ENV=production
 ```
 
-### Client (.env)
+### Client (.env) - Optional
 ```
+# Only set this if you want to override the automatic detection
 VITE_API_URL=https://your-server-domain.vercel.app
 ```
+
+**Note**: The client will automatically use:
+- `http://localhost:8080` for development (when running `npm run dev`)
+- Your production server URL when deployed to Vercel
 
 ## Deployment Steps
 

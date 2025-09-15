@@ -1,4 +1,20 @@
-export const baseURL = import.meta.env.VITE_API_URL
+// Automatically detect environment and use appropriate API URL
+const getBaseURL = () => {
+    // If VITE_API_URL is explicitly set, use it
+    if (import.meta.env.VITE_API_URL) {
+        return import.meta.env.VITE_API_URL;
+    }
+    
+    // For development (localhost), use local server
+    if (import.meta.env.DEV) {
+        return 'http://localhost:8080';
+    }
+    
+    // For production, you can set a default or use environment variable
+    return import.meta.env.VITE_API_URL || 'https://your-server-domain.vercel.app';
+};
+
+export const baseURL = getBaseURL();
 
 const SummaryApi = {
     register : {

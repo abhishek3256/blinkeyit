@@ -28,7 +28,7 @@ app.use(cors({
             'http://localhost:3000',
             'http://localhost:5173',
             'https://localhost:3000',
-            'https://localhost:5173'
+            'https://blinkeyit-42rn.vercel.app'
         ];
         
         // Add your Vercel domain here (replace with your actual Vercel domain)
