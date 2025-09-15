@@ -105,6 +105,10 @@ export async function verifyEmailController(request,response){
 //login controller
 export async function loginController(request,response){
     try {
+        console.log('Login controller - Request received');
+        console.log('Login controller - Headers:', request.headers);
+        console.log('Login controller - Origin:', request.headers.origin);
+        
         const { email , password } = request.body
 
 
@@ -153,17 +157,21 @@ export async function loginController(request,response){
 
         const cookiesOption = {
             httpOnly : false, // Allow JavaScript access in production
-            secure : process.env.NODE_ENV === 'production',
-            sameSite : process.env.NODE_ENV === 'production' ? "None" : "Lax",
+            secure : false, // Set to false for now to test
+            sameSite : "Lax", // Use Lax for better compatibility
             path: '/',
             maxAge: 5 * 60 * 60 * 1000 // 5 hours
         }
         
         console.log('Login - NODE_ENV:', process.env.NODE_ENV);
         console.log('Login - Cookie options:', cookiesOption);
+        console.log('Login - Setting accessToken cookie:', !!accesstoken);
+        console.log('Login - Setting refreshToken cookie:', !!refreshToken);
         
         response.cookie('accessToken',accesstoken,cookiesOption)
         response.cookie('refreshToken',refreshToken,cookiesOption)
+        
+        console.log('Login - Cookies set successfully');
 
         return response.json({
             message : "Login successfully",
@@ -191,8 +199,8 @@ export async function logoutController(request,response){
 
         const cookiesOption = {
             httpOnly : false, // Allow JavaScript access in production
-            secure : process.env.NODE_ENV === 'production',
-            sameSite : process.env.NODE_ENV === 'production' ? "None" : "Lax",
+            secure : false, // Set to false for now to test
+            sameSite : "Lax", // Use Lax for better compatibility
             path: '/',
             maxAge: 5 * 60 * 60 * 1000 // 5 hours
         }
@@ -478,8 +486,8 @@ export async function refreshToken(request,response){
 
         const cookiesOption = {
             httpOnly : false, // Allow JavaScript access in production
-            secure : process.env.NODE_ENV === 'production',
-            sameSite : process.env.NODE_ENV === 'production' ? "None" : "Lax",
+            secure : false, // Set to false for now to test
+            sameSite : "Lax", // Use Lax for better compatibility
             path: '/',
             maxAge: 5 * 60 * 60 * 1000 // 5 hours
         }
