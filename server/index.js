@@ -27,7 +27,7 @@ app.use(cors({
             process.env.FRONTEND_URL,
             'http://localhost:3000',
             'http://localhost:5173',
-            'https://blinkeyit.vercel.app',
+            'https://blinkeyit-42rn.vercel.app',
             'https://blinkeyit-client.vercel.app'
         ];
         
