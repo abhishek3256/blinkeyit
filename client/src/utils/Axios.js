@@ -136,4 +136,25 @@ window.testToken = () => {
     console.log('Test token retrieved:', localStorage.getItem('accesstoken'));
 }
 
+// Test function to simulate login response
+window.testLogin = () => {
+    const mockResponse = {
+        data: {
+            success: true,
+            data: {
+                accessToken: 'mock-access-token-123',
+                refreshToken: 'mock-refresh-token-456'
+            }
+        }
+    };
+    
+    console.log('Testing login simulation...');
+    localStorage.setItem('accesstoken', mockResponse.data.data.accessToken);
+    localStorage.setItem('refreshToken', mockResponse.data.data.refreshToken);
+    
+    console.log('Mock tokens stored');
+    console.log('Access token:', localStorage.getItem('accesstoken'));
+    console.log('Refresh token:', localStorage.getItem('refreshToken'));
+}
+
 export default Axios

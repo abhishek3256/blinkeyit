@@ -37,12 +37,19 @@ const Login = () => {
         e.preventDefault()
 
         try {
+            console.log('Login - Attempting login with data:', data);
             const response = await Axios({
                 ...SummaryApi.login,
                 data : data
             })
             
+            console.log('Login - Full response:', response);
+            console.log('Login - Response data:', response.data);
+            console.log('Login - Response success:', response.data.success);
+            console.log('Login - Response error:', response.data.error);
+            
             if(response.data.error){
+                console.log('Login - Error response:', response.data.message);
                 toast.error(response.data.message)
             }
 
@@ -53,8 +60,20 @@ const Login = () => {
                 console.log('Login - Access token from response:', response.data.data.accessToken);
                 console.log('Login - Refresh token from response:', response.data.data.refreshToken);
                 
-                localStorage.setItem('accesstoken',response.data.data.accessToken)
-                localStorage.setItem('refreshToken',response.data.data.refreshToken)
+                // Check if tokens exist before storing
+                if (response.data.data.accessToken) {
+                    localStorage.setItem('accesstoken', response.data.data.accessToken)
+                    console.log('Login - Access token stored successfully');
+                } else {
+                    console.log('Login - ERROR: No access token in response!');
+                }
+                
+                if (response.data.data.refreshToken) {
+                    localStorage.setItem('refreshToken', response.data.data.refreshToken)
+                    console.log('Login - Refresh token stored successfully');
+                } else {
+                    console.log('Login - ERROR: No refresh token in response!');
+                }
                 
                 // Verify what was actually stored
                 const storedToken = localStorage.getItem('accesstoken')
@@ -81,6 +100,9 @@ const Login = () => {
             }
 
         } catch (error) {
+            console.log('Login - Error caught:', error);
+            console.log('Login - Error response:', error.response);
+            console.log('Login - Error message:', error.message);
             AxiosToastError(error)
         }
 
