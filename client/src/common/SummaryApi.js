@@ -11,10 +11,15 @@ const getBaseURL = () => {
     }
     
     // For production, you can set a default or use environment variable
-    return import.meta.env.VITE_API_URL || 'https://your-server-domain.vercel.app';
+    return import.meta.env.VITE_API_URL || 'https://blinkeyit-server.vercel.app';
 };
 
 export const baseURL = getBaseURL();
+
+// Debug logging
+console.log('Environment:', import.meta.env.MODE);
+console.log('VITE_API_URL:', import.meta.env.VITE_API_URL);
+console.log('Final baseURL:', baseURL);
 
 const SummaryApi = {
     register : {
@@ -30,7 +35,7 @@ const SummaryApi = {
         method : 'put'
     },
     forgot_password_otp_verification : {
-        url : 'api/user/verify-forgot-password-otp',
+        url : '/api/user/verify-forgot-password-otp',
         method : 'put'
     },
     resetPassword : {
@@ -38,7 +43,7 @@ const SummaryApi = {
         method : 'put'
     },
     refreshToken : {
-        url : 'api/user/refresh-token',
+        url : '/api/user/refresh-token',
         method : 'post'
     },
     userDetails : {

@@ -36,10 +36,17 @@ app.use(cors({
             allowedOrigins.push(`https://${process.env.VERCEL_URL}`);
         }
         
-        if (allowedOrigins.indexOf(origin) !== -1) {
+        // Normalize origin by removing trailing slash
+        const normalizedOrigin = origin.replace(/\/$/, '');
+        const normalizedAllowedOrigins = allowedOrigins.map(orig => orig ? orig.replace(/\/$/, '') : orig);
+        
+        console.log('CORS check - Origin:', normalizedOrigin);
+        console.log('CORS check - Allowed origins:', normalizedAllowedOrigins);
+        
+        if (normalizedAllowedOrigins.indexOf(normalizedOrigin) !== -1) {
             callback(null, true);
         } else {
-            console.log('CORS blocked origin:', origin);
+            console.log('CORS blocked origin:', normalizedOrigin);
             callback(new Error('Not allowed by CORS'));
         }
     }

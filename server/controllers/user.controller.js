@@ -156,6 +156,10 @@ export async function loginController(request,response){
             secure : process.env.NODE_ENV === 'production',
             sameSite : process.env.NODE_ENV === 'production' ? "None" : "Lax"
         }
+        
+        console.log('Login - NODE_ENV:', process.env.NODE_ENV);
+        console.log('Login - Cookie options:', cookiesOption);
+        
         response.cookie('accessToken',accesstoken,cookiesOption)
         response.cookie('refreshToken',refreshToken,cookiesOption)
 
@@ -164,7 +168,7 @@ export async function loginController(request,response){
             error : false,
             success : true,
             data : {
-                accesstoken,
+                accessToken: accesstoken,
                 refreshToken
             }
         })
