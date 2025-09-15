@@ -152,7 +152,7 @@ export async function loginController(request,response){
         })
 
         const cookiesOption = {
-            httpOnly : true,
+            httpOnly : false, // Allow JavaScript access in production
             secure : process.env.NODE_ENV === 'production',
             sameSite : process.env.NODE_ENV === 'production' ? "None" : "Lax"
         }
@@ -188,7 +188,7 @@ export async function logoutController(request,response){
         const userid = request.userId //middleware
 
         const cookiesOption = {
-            httpOnly : true,
+            httpOnly : false, // Allow JavaScript access in production
             secure : process.env.NODE_ENV === 'production',
             sameSite : process.env.NODE_ENV === 'production' ? "None" : "Lax"
         }
@@ -473,7 +473,7 @@ export async function refreshToken(request,response){
         const newAccessToken = await generatedAccessToken(userId)
 
         const cookiesOption = {
-            httpOnly : true,
+            httpOnly : false, // Allow JavaScript access in production
             secure : process.env.NODE_ENV === 'production',
             sameSite : process.env.NODE_ENV === 'production' ? "None" : "Lax"
         }

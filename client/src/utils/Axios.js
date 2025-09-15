@@ -6,10 +6,32 @@ const Axios = axios.create({
     withCredentials : true
 })
 
+// Helper function to get token from localStorage or cookies
+const getAccessToken = () => {
+    // First try localStorage
+    let token = localStorage.getItem('accesstoken')
+    
+    // If not found, try to get from cookies
+    if (!token) {
+        const cookies = document.cookie.split(';')
+        const tokenCookie = cookies.find(cookie => 
+            cookie.trim().startsWith('accessToken=')
+        )
+        if (tokenCookie) {
+            token = tokenCookie.split('=')[1]
+        }
+    }
+    
+    return token
+}
+
 //sending access token in the header
 Axios.interceptors.request.use(
     async(config)=>{
-        const accessToken = localStorage.getItem('accesstoken')
+        const accessToken = getAccessToken()
+        
+        console.log('Axios Request - Access Token:', accessToken ? 'Found' : 'Not Found');
+        console.log('Axios Request - URL:', config.url);
 
         if(accessToken){
             config.headers.Authorization = `Bearer ${accessToken}`
@@ -34,7 +56,10 @@ Axios.interceptors.response.use(
         if(error.response?.status === 401 && !originRequest.retry){
             originRequest.retry = true
 
-            const refreshToken = localStorage.getItem("refreshToken")
+            const refreshToken = localStorage.getItem("refreshToken") || 
+                document.cookie.split(';').find(cookie => 
+                    cookie.trim().startsWith('refreshToken=')
+                )?.split('=')[1]
 
             if(refreshToken){
                 const newAccessToken = await refreshAccessToken(refreshToken)
