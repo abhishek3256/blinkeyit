@@ -8,11 +8,11 @@ const Axios = axios.create({
 
 // Helper function to get token from localStorage or cookies
 const getAccessToken = () => {
-    // First try localStorage
+    // First try localStorage (primary method)
     let token = localStorage.getItem('accesstoken')
     console.log('getAccessToken - localStorage token:', token ? 'Found' : 'Not Found');
     
-    // If not found, try to get from cookies
+    // If not found, try to get from cookies (fallback)
     if (!token) {
         console.log('getAccessToken - Checking cookies...');
         console.log('getAccessToken - All cookies:', document.cookie);
@@ -31,6 +31,12 @@ const getAccessToken = () => {
     }
     
     console.log('getAccessToken - Final token:', token ? 'Found' : 'Not Found');
+    
+    // If still no token, check if user is logged in
+    if (!token) {
+        console.log('getAccessToken - No token found. User may not be logged in.');
+    }
+    
     return token
 }
 
@@ -120,6 +126,14 @@ window.debugTokens = () => {
     console.log('accessToken cookie:', accessTokenCookie);
     console.log('refreshToken cookie:', refreshTokenCookie);
     console.log('==================');
+}
+
+// Test function to manually set a token
+window.testToken = () => {
+    const testToken = 'test-token-123';
+    localStorage.setItem('accesstoken', testToken);
+    console.log('Test token set:', testToken);
+    console.log('Test token retrieved:', localStorage.getItem('accesstoken'));
 }
 
 export default Axios

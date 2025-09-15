@@ -63,6 +63,12 @@ const Login = () => {
                 console.log('Login - Token stored in localStorage:', !!storedToken);
                 console.log('Login - Stored token value:', storedToken);
                 console.log('Login - Refresh token stored:', !!storedRefreshToken);
+                
+                // Test if we can retrieve the token immediately
+                setTimeout(() => {
+                    const testToken = localStorage.getItem('accesstoken')
+                    console.log('Login - Test token retrieval after 1 second:', testToken ? 'Found' : 'Not Found');
+                }, 1000);
 
                 const userDetails = await fetchUserDetails()
                 dispatch(setUserDetails(userDetails.data))

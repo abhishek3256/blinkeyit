@@ -155,12 +155,13 @@ export async function loginController(request,response){
             last_login_date : new Date()
         })
 
+        // Try to set cookies, but don't rely on them for cross-origin
         const cookiesOption = {
-            httpOnly : false, // Allow JavaScript access in production
-            secure : false, // Set to false for now to test
-            sameSite : "Lax", // Use Lax for better compatibility
+            httpOnly : false,
+            secure : process.env.NODE_ENV === 'production',
+            sameSite : process.env.NODE_ENV === 'production' ? "None" : "Lax",
             path: '/',
-            maxAge: 5 * 60 * 60 * 1000 // 5 hours
+            maxAge: 5 * 60 * 60 * 1000
         }
         
         console.log('Login - NODE_ENV:', process.env.NODE_ENV);
@@ -168,10 +169,13 @@ export async function loginController(request,response){
         console.log('Login - Setting accessToken cookie:', !!accesstoken);
         console.log('Login - Setting refreshToken cookie:', !!refreshToken);
         
-        response.cookie('accessToken',accesstoken,cookiesOption)
-        response.cookie('refreshToken',refreshToken,cookiesOption)
-        
-        console.log('Login - Cookies set successfully');
+        try {
+            response.cookie('accessToken',accesstoken,cookiesOption)
+            response.cookie('refreshToken',refreshToken,cookiesOption)
+            console.log('Login - Cookies set successfully');
+        } catch (cookieError) {
+            console.log('Login - Cookie setting failed:', cookieError.message);
+        }
 
         return response.json({
             message : "Login successfully",
