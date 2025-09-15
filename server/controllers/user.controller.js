@@ -154,7 +154,9 @@ export async function loginController(request,response){
         const cookiesOption = {
             httpOnly : false, // Allow JavaScript access in production
             secure : process.env.NODE_ENV === 'production',
-            sameSite : process.env.NODE_ENV === 'production' ? "None" : "Lax"
+            sameSite : process.env.NODE_ENV === 'production' ? "None" : "Lax",
+            path: '/',
+            maxAge: 5 * 60 * 60 * 1000 // 5 hours
         }
         
         console.log('Login - NODE_ENV:', process.env.NODE_ENV);
@@ -190,7 +192,9 @@ export async function logoutController(request,response){
         const cookiesOption = {
             httpOnly : false, // Allow JavaScript access in production
             secure : process.env.NODE_ENV === 'production',
-            sameSite : process.env.NODE_ENV === 'production' ? "None" : "Lax"
+            sameSite : process.env.NODE_ENV === 'production' ? "None" : "Lax",
+            path: '/',
+            maxAge: 5 * 60 * 60 * 1000 // 5 hours
         }
 
         response.clearCookie("accessToken",cookiesOption)
@@ -475,7 +479,9 @@ export async function refreshToken(request,response){
         const cookiesOption = {
             httpOnly : false, // Allow JavaScript access in production
             secure : process.env.NODE_ENV === 'production',
-            sameSite : process.env.NODE_ENV === 'production' ? "None" : "Lax"
+            sameSite : process.env.NODE_ENV === 'production' ? "None" : "Lax",
+            path: '/',
+            maxAge: 5 * 60 * 60 * 1000 // 5 hours
         }
 
         response.cookie('accessToken',newAccessToken,cookiesOption)

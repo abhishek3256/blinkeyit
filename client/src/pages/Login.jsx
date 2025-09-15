@@ -48,11 +48,21 @@ const Login = () => {
 
             if(response.data.success){
                 toast.success(response.data.message)
+                
+                console.log('Login - Response data:', response.data.data);
+                console.log('Login - Access token from response:', response.data.data.accessToken);
+                console.log('Login - Refresh token from response:', response.data.data.refreshToken);
+                
                 localStorage.setItem('accesstoken',response.data.data.accessToken)
                 localStorage.setItem('refreshToken',response.data.data.refreshToken)
                 
-                console.log('Login - Token stored in localStorage:', !!response.data.data.accessToken);
-                console.log('Login - Refresh token stored:', !!response.data.data.refreshToken);
+                // Verify what was actually stored
+                const storedToken = localStorage.getItem('accesstoken')
+                const storedRefreshToken = localStorage.getItem('refreshToken')
+                
+                console.log('Login - Token stored in localStorage:', !!storedToken);
+                console.log('Login - Stored token value:', storedToken);
+                console.log('Login - Refresh token stored:', !!storedRefreshToken);
 
                 const userDetails = await fetchUserDetails()
                 dispatch(setUserDetails(userDetails.data))
