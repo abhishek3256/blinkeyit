@@ -34,7 +34,6 @@ app.use(cors({
         if (allowedOrigins.indexOf(origin) !== -1) {
             callback(null, true);
         } else {
-            // For development, allow any localhost origin
             if (origin.includes('localhost') || origin.includes('127.0.0.1')) {
                 callback(null, true);
             } else {
