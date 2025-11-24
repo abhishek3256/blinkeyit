@@ -1,5 +1,9 @@
 import jwt from 'jsonwebtoken'
 
+const ACCESS_TOKEN_SECRET = process.env.SECRET_KEY_ACCESS_TOKEN
+    || process.env.ACCESS_TOKEN_SECRET
+    || 'blinkeyit-access-token-secret'
+
 const auth = async(request,response,next)=>{
     try {
         const token = request.cookies.accessToken || request?.headers?.authorization?.split(" ")[1]
@@ -14,7 +18,7 @@ const auth = async(request,response,next)=>{
             })
         }
 
-        const decode = await jwt.verify(token,process.env.SECRET_KEY_ACCESS_TOKEN)
+        const decode = await jwt.verify(token,ACCESS_TOKEN_SECRET)
 
         if(!decode){
             return response.status(401).json({

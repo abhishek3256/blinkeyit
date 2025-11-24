@@ -474,7 +474,12 @@ export async function refreshToken(request,response){
             })
         }
 
-        const verifyToken = await jwt.verify(refreshToken,process.env.SECRET_KEY_REFRESH_TOKEN)
+        const verifyToken = await jwt.verify(
+            refreshToken,
+            process.env.SECRET_KEY_REFRESH_TOKEN
+                || process.env.REFRESH_TOKEN_SECRET
+                || 'blinkeyit-refresh-token-secret'
+        )
 
         if(!verifyToken){
             return response.status(401).json({
@@ -484,7 +489,15 @@ export async function refreshToken(request,response){
             })
         }
 
-        const userId = verifyToken?._id
+        const userId = verifyToken?.id
+
+        if(!userId){
+            return response.status(401).json({
+                message : "Invalid token payload",
+                error : true,
+                success : false
+            })
+        }
 
         const newAccessToken = await generatedAccessToken(userId)
 
