@@ -33,68 +33,53 @@ const Login = () => {
     const valideValue = Object.values(data).every(el => el)
 
 
-    const handleSubmit = async(e)=>{
+    const handleSubmit = async (e) => {
         e.preventDefault()
 
         try {
             console.log('Login - Attempting login with data:', data);
             const response = await Axios({
                 ...SummaryApi.login,
-                data : data
+                data: data
             })
-            
+
             console.log('Login - Full response:', response);
             console.log('Login - Response data:', response.data);
             console.log('Login - Response success:', response.data.success);
             console.log('Login - Response error:', response.data.error);
-            
-            if(response.data.error){
+
+            if (response.data.error) {
                 console.log('Login - Error response:', response.data.message);
                 toast.error(response.data.message)
             }
 
-            if(response.data.success){
+            if (response.data.success) {
                 toast.success(response.data.message)
-                
+
                 console.log('Login - Response data:', response.data.data);
-                console.log('Login - Access token from response:', response.data.data.accessToken);
-                console.log('Login - Refresh token from response:', response.data.data.refreshToken);
-                
-                // Check if tokens exist before storing
+
                 if (response.data.data.accessToken) {
                     localStorage.setItem('accesstoken', response.data.data.accessToken)
-                    console.log('Login - Access token stored successfully');
-                } else {
-                    console.log('Login - ERROR: No access token in response!');
                 }
-                
+
                 if (response.data.data.refreshToken) {
                     localStorage.setItem('refreshToken', response.data.data.refreshToken)
-                    console.log('Login - Refresh token stored successfully');
-                } else {
-                    console.log('Login - ERROR: No refresh token in response!');
                 }
-                
-                // Verify what was actually stored
-                const storedToken = localStorage.getItem('accesstoken')
-                const storedRefreshToken = localStorage.getItem('refreshToken')
-                
-                console.log('Login - Token stored in localStorage:', !!storedToken);
-                console.log('Login - Stored token value:', storedToken);
-                console.log('Login - Refresh token stored:', !!storedRefreshToken);
-                
-                // Test if we can retrieve the token immediately
-                setTimeout(() => {
-                    const testToken = localStorage.getItem('accesstoken')
-                    console.log('Login - Test token retrieval after 1 second:', testToken ? 'Found' : 'Not Found');
-                }, 1000);
+
+                // Verify storage
+                const storedToken = localStorage.getItem('accesstoken');
+                if (!storedToken) {
+                    console.error("Login - FAILED to store access token!");
+                    toast.error("Login failed: Could not save session.");
+                    return;
+                }
 
                 const userDetails = await fetchUserDetails()
                 dispatch(setUserDetails(userDetails.data))
 
                 setData({
-                    email : "",
-                    password : "",
+                    email: "",
+                    password: "",
                 })
                 navigate("/")
             }
@@ -150,8 +135,8 @@ const Login = () => {
                         </div>
                         <Link to={"/forgot-password"} className='block ml-auto hover:text-primary-200'>Forgot password ?</Link>
                     </div>
-    
-                    <button disabled={!valideValue} className={` ${valideValue ? "bg-green-800 hover:bg-green-700" : "bg-gray-500" }    text-white py-2 rounded font-semibold my-3 tracking-wide`}>Login</button>
+
+                    <button disabled={!valideValue} className={` ${valideValue ? "bg-green-800 hover:bg-green-700" : "bg-gray-500"}    text-white py-2 rounded font-semibold my-3 tracking-wide`}>Login</button>
 
                 </form>
 

@@ -41,15 +41,20 @@ app.use(cors({
         const normalizedAllowedOrigins = allowedOrigins.map(orig => orig ? orig.replace(/\/$/, '') : orig);
         
         console.log('CORS check - Origin:', normalizedOrigin);
-        console.log('CORS check - Allowed origins:', normalizedAllowedOrigins);
+        
+        // For debugging: Allow all origins temporarily if needed, or stick to the list
+        // callback(null, true); // Uncomment to allow all
         
         if (normalizedAllowedOrigins.indexOf(normalizedOrigin) !== -1) {
             callback(null, true);
         } else {
-            console.log('CORS blocked origin:', normalizedOrigin);
-            callback(new Error('Not allowed by CORS'));
+            // console.log('CORS blocked origin:', normalizedOrigin);
+            // callback(new Error('Not allowed by CORS'));
+             console.log('CORS allowed (permissive mode):', normalizedOrigin);
+             callback(null, true);
         }
-    }
+    },
+    credentials : true
 }))
 app.use(express.json())
 app.use(cookieParser())

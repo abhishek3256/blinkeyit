@@ -1,60 +1,46 @@
 import axios from "axios";
-import SummaryApi , { baseURL } from "../common/SummaryApi";
+import SummaryApi, { baseURL } from "../common/SummaryApi";
 
 const Axios = axios.create({
-    baseURL : baseURL,
-    withCredentials : true
+    baseURL: baseURL,
+    withCredentials: true
 })
 
 // Helper function to get token from localStorage or cookies
 const getAccessToken = () => {
     // First try localStorage (primary method)
     let token = localStorage.getItem('accesstoken')
-    console.log('getAccessToken - localStorage token:', token ? 'Found' : 'Not Found');
-    
+
     // If not found, try to get from cookies (fallback)
     if (!token) {
-        console.log('getAccessToken - Checking cookies...');
-        console.log('getAccessToken - All cookies:', document.cookie);
-        
         const cookies = document.cookie.split(';')
-        const tokenCookie = cookies.find(cookie => 
+        const tokenCookie = cookies.find(cookie =>
             cookie.trim().startsWith('accessToken=')
         )
-        
-        console.log('getAccessToken - Token cookie found:', !!tokenCookie);
-        
+
         if (tokenCookie) {
             token = tokenCookie.split('=')[1]
-            console.log('getAccessToken - Token from cookie:', token ? 'Found' : 'Not Found');
         }
     }
-    
-    console.log('getAccessToken - Final token:', token ? 'Found' : 'Not Found');
-    
-    // If still no token, check if user is logged in
-    if (!token) {
-        console.log('getAccessToken - No token found. User may not be logged in.');
-    }
-    
+
     return token
 }
 
 //sending access token in the header
 Axios.interceptors.request.use(
-    async(config)=>{
+    async (config) => {
         const accessToken = getAccessToken()
-        
+
         console.log('Axios Request - Access Token:', accessToken ? 'Found' : 'Not Found');
         console.log('Axios Request - URL:', config.url);
 
-        if(accessToken){
+        if (accessToken) {
             config.headers.Authorization = `Bearer ${accessToken}`
         }
 
         return config
     },
-    (error)=>{
+    (error) => {
         return Promise.reject(error)
     }
 )
@@ -62,46 +48,46 @@ Axios.interceptors.request.use(
 //extend the life span of access token with 
 // the help refresh
 Axios.interceptors.response.use(
-    (response)=>{
+    (response) => {
         return response
     },
-    async(error)=>{
-        let originRequest = error.config 
+    async (error) => {
+        let originRequest = error.config
 
-        if(error.response?.status === 401 && !originRequest.retry){
+        if (error.response?.status === 401 && !originRequest.retry) {
             originRequest.retry = true
 
-            const refreshToken = localStorage.getItem("refreshToken") || 
-                document.cookie.split(';').find(cookie => 
+            const refreshToken = localStorage.getItem("refreshToken") ||
+                document.cookie.split(';').find(cookie =>
                     cookie.trim().startsWith('refreshToken=')
                 )?.split('=')[1]
 
-            if(refreshToken){
+            if (refreshToken) {
                 const newAccessToken = await refreshAccessToken(refreshToken)
 
-                if(newAccessToken){
+                if (newAccessToken) {
                     originRequest.headers.Authorization = `Bearer ${newAccessToken}`
                     return Axios(originRequest)
                 }
             }
         }
-        
+
         return Promise.reject(error)
     }
 )
 
 
-const refreshAccessToken = async(refreshToken)=>{
+const refreshAccessToken = async (refreshToken) => {
     try {
         const response = await Axios({
             ...SummaryApi.refreshToken,
-            headers : {
-                Authorization : `Bearer ${refreshToken}`
+            headers: {
+                Authorization: `Bearer ${refreshToken}`
             }
         })
 
         const accessToken = response.data.data.accessToken
-        localStorage.setItem('accesstoken',accessToken)
+        localStorage.setItem('accesstoken', accessToken)
         return accessToken
     } catch (error) {
         console.log(error)
@@ -114,15 +100,15 @@ window.debugTokens = () => {
     console.log('localStorage accesstoken:', localStorage.getItem('accesstoken'));
     console.log('localStorage refreshToken:', localStorage.getItem('refreshToken'));
     console.log('All cookies:', document.cookie);
-    
+
     const cookies = document.cookie.split(';');
-    const accessTokenCookie = cookies.find(cookie => 
+    const accessTokenCookie = cookies.find(cookie =>
         cookie.trim().startsWith('accessToken=')
     );
-    const refreshTokenCookie = cookies.find(cookie => 
+    const refreshTokenCookie = cookies.find(cookie =>
         cookie.trim().startsWith('refreshToken=')
     );
-    
+
     console.log('accessToken cookie:', accessTokenCookie);
     console.log('refreshToken cookie:', refreshTokenCookie);
     console.log('==================');
@@ -147,11 +133,11 @@ window.testLogin = () => {
             }
         }
     };
-    
+
     console.log('Testing login simulation...');
     localStorage.setItem('accesstoken', mockResponse.data.data.accessToken);
     localStorage.setItem('refreshToken', mockResponse.data.data.refreshToken);
-    
+
     console.log('Mock tokens stored');
     console.log('Access token:', localStorage.getItem('accesstoken'));
     console.log('Refresh token:', localStorage.getItem('refreshToken'));
