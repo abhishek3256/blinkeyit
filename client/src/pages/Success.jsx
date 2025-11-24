@@ -1,17 +1,23 @@
 import React, { useEffect } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
+import { handleAddItemCart } from '../store/cartProduct'
 
 const Success = () => {
   const location = useLocation()
   const navigate = useNavigate()
+  const dispatch = useDispatch()
 
   console.log("location", location)
 
   useEffect(() => {
+    // Clear cart on success
+    dispatch(handleAddItemCart([]))
+
     setTimeout(() => {
       navigate("/")
     }, 3000)
-  }, [navigate])
+  }, [navigate, dispatch])
 
   return (
     <div className='m-2 w-full max-w-md bg-green-200 p-4 py-5 rounded mx-auto flex flex-col justify-center items-center gap-5'>
